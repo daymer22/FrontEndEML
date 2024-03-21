@@ -1,0 +1,282 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Usuarios registrados</h4>
+        <button
+          type="button"
+          class="btn btn-rounded btn-outline-success"
+          (click)="AbrirModalUsers(contenido, true)"
+        >
+          <i class="bi bi-person-add me-1"></i>
+        </button>
+        <div class="table-responsive">
+          <table class="table align-middle text-nowrap">
+            <thead>
+              <tr>
+                <th class="text-dark font-medium fs-4">Nombres</th>
+                <th class="text-dark font-medium fs-4">Apellidos</th>
+                <th class="text-dark font-medium fs-4">Correo</th>
+                <th class="text-dark font-medium fs-4">Teléfono</th>
+                <th class="text-dark font-medium fs-4">Dirección</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of Usuarios">
+                <td class="fs-4">{{user.nombres}}</td>
+                <td class="fs-4">{{user.apellidos}}</td>
+                <td class="fs-4">{{user.correo}}</td>
+                <td class="fs-4">{{user.telefono}}</td>
+                <td class="fs-4">{{user.direccion}}</td>
+                <td class="fs-4">
+                  <button
+                    type="button"
+                    class="btn btn-rounded btn-outline-warning"
+                    (click)="AbrirModalModificarUsuarios(user, contenidoModificar, true)"
+                  >
+                    <i class="bi bi-pencil me-1"></i>
+                  </button>
+                </td>
+                <td class="fs-4">
+                  <button
+                    type="button"
+                    class="btn btn-rounded btn-outline-danger"
+                    (click)="EliminarUsuario(user.id)"
+                  >
+                    <i class="bi bi-trash3-fill me-1"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #contenido let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title text-center">Nuevo usuario</h3>
+      <button
+        class="close btn btn-light"
+        aria-label="close"
+        type="button"
+        (click)="serviciomodal.dismissAll()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <form>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="Nombres"
+                aria-describedby="Nombres"
+                name="Nombres"
+                [(ngModel)]="Nombres"
+                (keypress)="
+                  ValidarCaracteresAlfabeticosYMaxlength($event, 'Nombres')
+                "
+              />
+              <small id="Nombres" class="form-text text-muted"
+                >Digite los nombres del usuario.</small
+              >
+            </div>
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="Apellidos"
+                aria-describedby="Apellidos"
+                name="Apellidos"
+                [(ngModel)]="Apellidos"
+                (keypress)="
+                  ValidarCaracteresAlfabeticosYMaxlength($event, 'Apellidos')
+                "
+              />
+              <small id="Apellidos" class="form-text text-muted"
+                >Digite los apellidos del usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <input
+                type="email"
+                class="form-control"
+                id="Correo"
+                aria-describedby="Correo"
+                [(ngModel)]="Correo"
+                name="Correo"
+                (keypress)="ValidarCaracteresAlfanumericosYMaxlength($event, 'Correo')"
+              />
+              <small id="Correo" class="form-text text-muted"
+                >Digite el correo electrónico del usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="Direccion"
+                aria-describedby="Direccion"
+                [(ngModel)]="Direccion"
+                name="Direccion"
+              />
+              <small id="Direccion" class="form-text text-muted"
+                >Digite la dirección residencial del usuario.</small
+              >
+            </div>
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="Telefono"
+                aria-describedby="Telefono"
+                [(ngModel)]="Telefono"
+                name="Telefono"
+                (keypress)="
+                  ValidarCaracteresNumericosYMaxlength('Telefono', $event)
+                "
+              />
+              <small id="Telefono" class="form-text text-muted"
+                >Digite el número de teléfono del usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row" style="margin-top: 3%">
+            <div class="form-group col-md-12">
+              <button
+                type="button"
+                class="btn btn-rounded btn-outline-success"
+                (click)="GuardarUsuarios()"
+              >
+                <i class="bi bi-person-add me-1"></i>Guardar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer"></div>
+  </ng-template>
+
+  <ng-template #contenidoModificar let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title text-center">Modificar usuario</h3>
+      <button
+        class="close btn btn-light"
+        aria-label="close"
+        type="button"
+        (click)="serviciomodal.dismissAll()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <form>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="NombresModificar"
+                aria-describedby="NombresModificar"
+                name="NombresModificar"
+                [(ngModel)]="NombresModificar"
+                (keypress)="
+                  ValidarCaracteresAlfabeticosYMaxlength($event, 'NombresModificar')
+                "
+              />
+              <small id="NombresModificar" class="form-text text-muted"
+                >Digite los nuevos nombres al usuario.</small
+              >
+            </div>
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="ApellidosModificar"
+                aria-describedby="ApellidosModificar"
+                name="ApellidosModificar"
+                [(ngModel)]="ApellidosModificar"
+                (keypress)="
+                  ValidarCaracteresAlfabeticosYMaxlength($event, 'ApellidosModificar')
+                "
+              />
+              <small id="ApellidosModificar" class="form-text text-muted"
+                >Digite los nuevos apellidos al usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <input
+                type="email"
+                class="form-control"
+                id="CorreoModificar"
+                aria-describedby="CorreoModificar"
+                [(ngModel)]="CorreoModificar"
+                name="CorreoModificar"
+                (keypress)="ValidarCaracteresAlfanumericosYMaxlength($event, 'CorreoModificar')"
+              />
+              <small id="CorreoModificar" class="form-text text-muted"
+                >Digite el nuevo correo electrónico al usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="DireccionModificar"
+                aria-describedby="DireccionModificar"
+                [(ngModel)]="DireccionModificar"
+                name="DireccionModificar"
+              />
+              <small id="DireccionModificar" class="form-text text-muted"
+                >Digite la nueva dirección de residencial al usuario.</small
+              >
+            </div>
+            <div class="form-group col-md-6">
+              <input
+                type="text"
+                class="form-control"
+                id="TelefonoModificar"
+                aria-describedby="TelefonoModificar"
+                [(ngModel)]="TelefonoModificar"
+                name="TelefonoModificar"
+                (keypress)="
+                  ValidarCaracteresNumericosYMaxlength('TelefonoModificar', $event)
+                "
+              />
+              <small id="TelefonoModificar" class="form-text text-muted"
+                >Digite el número de teléfono del usuario.</small
+              >
+            </div>
+          </div>
+          <div class="row" style="margin-top: 3%">
+            <div class="form-group col-md-12">
+              <button
+                type="button"
+                class="btn btn-rounded btn-outline-success"
+                (click)="GuardarModificacionUsuarios()"
+              >
+                <i class="bi bi-person-add me-1"></i>Guardar modificaciòn
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer"></div>
+  </ng-template>
+</div>
